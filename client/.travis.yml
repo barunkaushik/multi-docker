@@ -1,0 +1,16 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t kaushikbarun/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run kaushikbarun/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t kaushikbarun/multi-client ./client
+  - docker build -t kaushikbarun/multi-nginx ./nginx
+  - docker build -t kaushikbarun/multi-server ./server
+  - docker build -t kaushikbarun/multi-worker ./worker
